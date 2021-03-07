@@ -33,7 +33,7 @@
 
 
 ### More documentation
-API [https://10k-resistor.github.io/Solis4Gmini-logger/json-api.md](https://10k-resistor.github.io/Solis4Gmini-logger/json-api.md)
+- API [https://10k-resistor.github.io/Solis4Gmini-logger/json-api.md](https://10k-resistor.github.io/Solis4Gmini-logger/json-api.md)
 
 ### Known problems
  - ESP sometimes crashes while ntp sync
