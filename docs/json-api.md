@@ -9,12 +9,19 @@ The data is always updated when the inverter is polled.
 <IP-from-your-ESP>/api/all.json
 ```
 Response:
+```
 {
-	"power": 290.00,
+	"power": 270.00,
 	"energyToday": 0.80,
-	"isOnline": 1
+	"isOnline": 1,
+	"dc_u": 70.60,
+	"dc_i": 4.60,
+	"ac_u": 236.10,
+	"ac_i": 1.30,
+	"ac_f": 50.00,
+	"temperature": 15.00
 }
-
+```
 ### Only Power
 ```
 <IP-from-your-ESP>/api/power.json
