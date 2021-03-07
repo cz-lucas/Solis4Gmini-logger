@@ -54,6 +54,8 @@ uint8_t Hour = 0;
 uint8_t Minute = 0;
 
 void readInverter();
+void notFound(AsyncWebServerRequest *request);
+String buildResponse(byte type);
 
 void setup()
 {
@@ -96,7 +98,17 @@ void setup()
 
   // Start mqtt
   MQTTClient.begin();
+
   /* Start AsyncWebServer */
+  server.onNotFound(notFound);
+
+  server.on("/api/power.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "application/json", buildResponse(0));
+  });
+  server.on("/api/all.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "application/json", buildResponse(1));
+  });
+
   server.begin();
   // Start OTA
   ArduinoOTA.begin();
@@ -247,4 +259,53 @@ void readInverter()
   card_AC_F.update(ac_f);
 
   dashboard.sendUpdates();
+}
+
+void notFound(AsyncWebServerRequest *request)
+{
+  request->send(404, "text/plain", "Not found");
+}
+
+String buildResponse(byte type)
+{
+  String str = "{";
+
+  switch (type)
+  {
+
+  case 0: // Only return power
+    str += "\"power\": ";
+    str += String(power);
+    str += ",\"energyToday\": ";
+    str += String(energyToday);
+    str += ",\"isOnline\": ";
+    str += String(Inverter.isInverterReachable());
+    break;
+
+  case 1: // Return all data
+    str += "\"power\": ";
+    str += String(power);
+    str += ",\"energyToday\": ";
+    str += String(energyToday);
+    str += ",\"isOnline\": ";
+    str += String(Inverter.isInverterReachable());
+
+    str += ",\"dc_u\": ";
+    str += String(dc_u);
+    str += ",\"dc_i\": ";
+    str += String(dc_i);
+
+    str += ",\"ac_u\": ";
+    str += String(ac_u);
+    str += ",\"ac_i\": ";
+    str += String(ac_i);
+    str += ",\"ac_f\": ";
+    str += String(ac_f);
+    str += ",\"temperature\": ";
+    str += String(temperature);
+    break;
+  }
+
+  str += "}";
+  return str;
 }

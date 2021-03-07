@@ -7,7 +7,7 @@
 - [x] Static-IP  
 - [ ] "midnight reset"
 - [ ] Telegram bot
-- [ ] API (Json?)
+- [X] API (Json?)
 - [ ] IPv6
 - [ ] ds18b20
 - [ ] Sensors(?)  

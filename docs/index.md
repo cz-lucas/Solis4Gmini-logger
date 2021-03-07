@@ -31,5 +31,9 @@
 ### Status leds
 ![Schematic](files/img/table-leds.png "Picture from schematic")
 
+
+### More documentation
+API [https://10k-resistor.github.io/Solis4Gmini-logger/json-api.md](https://10k-resistor.github.io/Solis4Gmini-logger/json-api.md)
+
 ### Known problems
  - ESP sometimes crashes while ntp sync
