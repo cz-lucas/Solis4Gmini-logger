@@ -1,0 +1,14 @@
+### Todo-list  
+- [x] Webinterface  
+- [x] MQTT  
+- [x] PV-Output  
+- [x] Influx-DB  
+- [X] Status-leds  
+- [x] Static-IP  
+- [ ] "midnight reset"
+- [ ] Telegram bot
+- [ ] API (Json?)
+- [ ] IPv6
+- [ ] ds18b20
+- [ ] Sensors(?)  
+- [ ] Display(?)  

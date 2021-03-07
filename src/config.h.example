@@ -1,0 +1,95 @@
+#pragma once
+#include "main.h"
+
+
+// Wlan
+#define SSID "Your-ssid"
+#define PASSWORD "YourPassword"
+#define HOSTNAME "ESP8266-PV-LOGGER"
+
+// Static IP config is in main.cpp
+
+// MQTT
+//#define MQTT
+#ifdef MQTT
+#define mqttBrokerIP "192.168.111.2"
+#define mqttBrokerPort 1883
+#define mqtt_base_topic "/home/pv/#"
+
+
+#define readInterval 45 // in s
+#define mqtt_power_topic "/home/all/pv/actualPower"
+#define mqtt_eToday_topic "/home/all/pv/energyToday"
+#define mqtt_temp_topic "/home/all/pv/inverterTemp"
+
+#define mqtt_dcu_topic "/home/all/pv/dc/u"
+#define mqtt_dci_topic "/home/all/pv/dc/i"
+
+#define mqtt_acu_topic "/home/all/pv/ac/u"
+#define mqtt_aci_topic "/home/all/pv/ac/i"
+#define mqtt_acf_topic "/home/all/pv/ac/f"
+
+#define mqttStatusIntveral 300 // in s
+#define mqtt_info_ping_topic "/home/all/pv/status/ping"
+#define mqtt_info_pong_topic "/home/all/pv/status/pong"
+#define mqtt_status_rssi_topic "/home/all/pv/status/rssi"
+#endif
+
+// INFLUXDB
+//#define influxDB
+#ifdef influxDB
+#define INFLUXDB_HOST "192.168.111.2"   //Enter IP of device running Influx Database
+#define INFLUXDB_DATABASE "pv" //Database name
+#define defaultTableName "pv" // Name of the table with power, voltage, ...
+#define influxdbInterval 600 // in s
+
+// Logged parameters
+// Comment out line to disable logging for the parameter
+#define INFLUXDB_POWER
+// #define INFLUXDB_ENERGYTODAY
+#define INFLUXDB_DC_U
+#define INFLUXDB_DC_I
+// #define INFLUXDB_AC_U
+// #define INFLUXDB_AC_I
+// #define INFLUXDB_AC_F
+// #define INFLUXDB_TEMPERATURE
+// #define INFLUXDB_RSSI
+
+#define dailyEnergyInfluxDB // This option write the produced energy in another table every time the inverter turns off
+#define deTableName "dailyEnergy"
+
+#endif
+
+// PVOUTPUT
+//#define PVOUTPUT
+#ifdef PVOUTPUT
+#define PVOUTPUT_sendInterval 600 // in s 10min
+#define PVOUTPUT_systemID "SYSTEM_ID"
+#define PVOUTPUT_key "PVOUTPUT-KEY"
+#endif
+
+//  NTP
+#define NTP_SERVER_IP "pool.ntp.org"
+#define TIMEZONE +1 // Central europe
+
+// Status leds
+#define LED_BLUE   13 // D7
+#define LED_YELLOW 15 // D8
+
+// RS485 - MODBUS CONFIG
+// slaveID from inverter
+#define slaveID_inverter 1
+#define readDelay 2550 // delay between reading data
+
+/*!
+  We're using a MAX485-compatible RS485 Transceiver.
+  Rx/Tx is hooked up to the hardware serial port at 'Serial'.
+  The Data Enable and Receiver Enable pins are hooked up as follows:
+*/
+#define MAX485_DE 16 // D0
+
+// RX
+#define rs485_RX 14 // D5 
+
+// TX
+#define rs485_TX 12 // D6
