@@ -20,6 +20,8 @@ float _ac_u = 0.00;
 float _ac_i = 0.00;
 float _ac_f = 0.00;
 
+bool _softRun = true;
+
 bool reachable = false;
 bool reachable_flag__lst = true;
 
@@ -41,7 +43,14 @@ bool inverter::request()
     if (result == node.ku8MBSuccess)
     {
         //Serial.print("P: ");
+
+        if( _ac_i != 0.0){ // Detect softrun
         _power = node.getResponseBuffer(0x00);
+        _softRun = false;
+        } else {
+            _power = 0.0;
+            _softRun = true;
+        }
     }
     else
     {
@@ -183,6 +192,9 @@ bool inverter::setIsInverterReachableFlagLast(bool _value)
     return reachable_flag__lst;
 }
 
+bool inverter::isSoftRun(){
+    return _softRun;
+}
 
 void inverter::begin()
 {

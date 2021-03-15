@@ -16,6 +16,7 @@ public:
     void getEnergyToday(float *__energyToday);
     
     bool isInverterReachable();
+    bool isSoftRun();
     bool setIsInverterReachableFlagLast(bool _value);
     bool getIsInverterReachableFlagLast();
 
