@@ -123,11 +123,6 @@ void setup()
 
   Clock.getDate(&Year, &Month, &Day);
   Clock.getTime(&Hour, &Minute);
-  if (Inverter.isInverterReachable() == true)
-  {
-    PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
-    db.write(power, energyToday, ac_u, ac_i, ac_f, dc_u, dc_i, temperature);
-  }
 
   ticker.begin();
   led.yellowOff();
