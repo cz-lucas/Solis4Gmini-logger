@@ -6,7 +6,6 @@
 - [X] Status-leds  
 - [x] Static-IP  
 - [ ] "midnight reset"
-- [ ] Telegram bot
 - [X] API (Json?)
 - [ ] IPv6
 - [ ] ds18b20
