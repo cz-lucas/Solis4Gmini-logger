@@ -28,7 +28,9 @@ Write values in influxdb
 */
 void influx::write(float power, float energyToday, float AC_U, float AC_I, float AC_F, float DC_U, float DC_I, float temperature)
 {
+#ifdef influxDB
     InfluxData row(defaultTableName);
+#endif
 
 #ifdef INFLUXDB_POWER
     row.addValue("power", power);
@@ -66,7 +68,9 @@ void influx::write(float power, float energyToday, float AC_U, float AC_I, float
     row.addValue("rssi", WiFi.RSSI());
 #endif
 
+#ifdef influxDB
     influxdb.write(row);
+#endif
 }
 
 void influx::writeEnergy(float energy)

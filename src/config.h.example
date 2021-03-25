@@ -37,11 +37,11 @@
 
 // INFLUXDB
 //#define influxDB
+#define influxdbInterval 600 // in s
 #ifdef influxDB
 #define INFLUXDB_HOST "192.168.111.2"   //Enter IP of device running Influx Database
 #define INFLUXDB_DATABASE "pv" //Database name
 #define defaultTableName "pv" // Name of the table with power, voltage, ...
-#define influxdbInterval 600 // in s
 
 // Logged parameters
 // Comment out line to disable logging for the parameter

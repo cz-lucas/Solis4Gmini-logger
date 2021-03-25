@@ -18,8 +18,10 @@ Starts MQTT
 */
 void myMqtt::begin()
 {
+    #ifdef MQTT
     Serial.println("Connecting to Mqtt...");
     connect();
+    #endif
 }
 
 /*
@@ -27,11 +29,13 @@ Loops MQTT
 */
 void myMqtt::loop()
 {
+    #ifdef MQTT
     if (!client.connected())
     {
         reconnect();
     }
     client.loop();
+    #endif
 }
 
 /*
@@ -47,6 +51,7 @@ Send values over MQTT
 */
 void myMqtt::sendValues(float power, float energyToday, float AC_U, float AC_I, float AC_F, float DC_U, float DC_I, float temperature)
 {
+    #ifdef MQTT
     char bufferSend[10];
 
     dtostrf(power, 0, 0, bufferSend);
@@ -67,6 +72,7 @@ void myMqtt::sendValues(float power, float energyToday, float AC_U, float AC_I, 
     client.publish(mqtt_dcu_topic, bufferSend);
     dtostrf(DC_I, 0, 1, bufferSend);
     client.publish(mqtt_dci_topic, bufferSend);
+    #endif
 }
 
 /*
