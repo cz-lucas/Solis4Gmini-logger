@@ -52,10 +52,12 @@ uint8_t Month = 0;
 uint8_t Day = 0;
 uint8_t Hour = 0;
 uint8_t Minute = 0;
+bool restart = false;
 
 void readInverter();
 void notFound(AsyncWebServerRequest *request);
 String buildResponse(byte type);
+String restartAPI();
 
 void setup()
 {
@@ -109,6 +111,10 @@ void setup()
     request->send(200, "application/json", buildResponse(1));
   });
 
+  server.on("/api/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/html", restartAPI());
+  });
+
   server.begin();
   // Start OTA
   ArduinoOTA.begin();
@@ -123,6 +129,9 @@ void setup()
 
   Clock.getDate(&Year, &Month, &Day);
   Clock.getTime(&Hour, &Minute);
+
+  readInverter();
+  PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
 
   ticker.begin();
   led.yellowOff();
@@ -171,6 +180,12 @@ void loop()
 
     led.yellowOff();
     ticker.setReadFlagToFalse();
+
+    if (restart == true)
+    {
+      Serial.println("Restarting...");
+      ESP.reset();
+    }
   }
 
   if (ticker.getinfluxDBFlag() == true)
@@ -303,4 +318,10 @@ String buildResponse(byte type)
 
   str += "}";
   return str;
+}
+
+String restartAPI()
+{
+  restart = true;
+  return "Restarting";
 }

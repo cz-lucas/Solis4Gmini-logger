@@ -35,6 +35,11 @@ Response:
 }
 ```
 
+### Restart ESP
+```
+<IP-from-your-ESP>/api/restart
+```
+
 ## Examples
 ### Curl
 Get all data
