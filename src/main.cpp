@@ -133,7 +133,9 @@ void setup()
   ticker.begin();
   led.yellowOff();
 
-  delay(5000);
+  delay(8500);
+  readInverter();
+  delay(8500);
   readInverter();
   PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
 
