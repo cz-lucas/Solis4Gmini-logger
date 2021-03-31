@@ -62,8 +62,8 @@
 
 // PVOUTPUT
 //#define PVOUTPUT
-#ifdef PVOUTPUT
 #define PVOUTPUT_sendInterval 600 // in s 10min
+#ifdef PVOUTPUT
 #define PVOUTPUT_systemID "SYSTEM_ID"
 #define PVOUTPUT_key "PVOUTPUT-KEY"
 #endif
