@@ -27,6 +27,8 @@ AsyncWebServer server(80);
 ESPDash dashboard(&server);
 Card card_power(&dashboard, GENERIC_CARD, "Power (W)");
 Card card_energyToday(&dashboard, GENERIC_CARD, "Energy Today (kWh)");
+Card card_status(&dashboard, STATUS_CARD, "TStatus", "danger");
+
 Card card_temperature(&dashboard, TEMPERATURE_CARD, "Temperature (°C)");
 
 Card card_AC_U(&dashboard, GENERIC_CARD, "AC VOLTAGE (V)");
@@ -116,6 +118,7 @@ void setup()
   });
 
   server.begin();
+  card_status.update("Starting");
   // Start OTA
   ArduinoOTA.begin();
 
@@ -137,7 +140,11 @@ void setup()
   readInverter();
   delay(8500);
   readInverter();
+
+  card_status.update("Sending to PVOutput", "warning");
   PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
+card_status.update("running", "success");
+
 
   Serial.println("--------------------------------------------------------");
 }
@@ -161,6 +168,7 @@ void loop()
     readInverter();
     if (Inverter.isInverterReachable() == true)
     {
+      card_status.update("Inverter online", "success");
       led.disableNightblink();
       led.yellowOn();
       led.blueOn();
@@ -172,6 +180,7 @@ void loop()
     {
       led.blueOff();
       led.enableNightBlink();
+      card_status.update("Inverter off", "idle");
     }
 
     if (Inverter.isInverterReachable() != Inverter.getIsInverterReachableFlagLast())
@@ -205,7 +214,9 @@ void loop()
     Clock.getTime(&Hour, &Minute);
     if (Inverter.isInverterReachable() == true)
     {
+      card_status.update("Sending to PVOutput", "warning");
       PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
+      card_status.update("Inverter online", "success");
     }
     else
     {
