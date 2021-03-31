@@ -122,6 +122,7 @@ void setup()
   dashboard.sendUpdates();
   // Start OTA
   ArduinoOTA.begin();
+  ArduinoOTA.handle();
 
   db.begin();
   Clock.begin();
@@ -129,6 +130,7 @@ void setup()
 
   // Read inverter
   readInverter();
+  ArduinoOTA.handle();
   MQTTClient.sendValues(power, energyToday, ac_u, ac_i, ac_f, dc_u, dc_i, temperature);
 
   Clock.getDate(&Year, &Month, &Day);
@@ -138,16 +140,20 @@ void setup()
   led.yellowOff();
 
   delay(8500);
+  ArduinoOTA.handle();
   readInverter();
+  ArduinoOTA.handle();
   delay(8500);
+  ArduinoOTA.handle();
   readInverter();
+  ArduinoOTA.handle();
 
   card_status.update("Sending to PVOutput", "warning");
   dashboard.sendUpdates();
   PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
-card_status.update("running", "success");
-dashboard.sendUpdates();
-
+  card_status.update("running", "success");
+  dashboard.sendUpdates();
+  ArduinoOTA.handle();
 
   Serial.println("--------------------------------------------------------");
 }

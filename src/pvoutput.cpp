@@ -10,6 +10,8 @@ LED led_pvOutput;
 bool callhttps();
 String reqPath = "";
 
+WiFiClientSecure httpsClient; //Declare object of class WiFiClient
+
 pvoutput::pvoutput()
 {
 }
@@ -106,7 +108,6 @@ bool pvoutput::send(uint16_t _year, uint8_t _month, uint8_t _day, uint8_t _hour,
 
 bool callhttps()
 {
-    WiFiClientSecure httpsClient; //Declare object of class WiFiClient
 
     httpsClient.setInsecure();
     //httpsClient.setTimeout(300);
@@ -155,39 +156,3 @@ bool callhttps()
     led_pvOutput.yellowOff();
     return true;
 }
-
-/*bool callhttps()
-{
-    WiFiClientSecure httpsClient;
-    httpsClient.setTimeout(15000);
-    delay(1000);
-    int retry = 0;
-    while ((!httpsClient.connect(serverName, httpsPort)) && (retry < 10))
-    {
-        delay(100);
-        Serial.print(".");
-        retry++;
-    }
-    if (retry == 10)
-    {
-        Serial.println("Connection failed");
-        return false;
-    }
-    else
-    {
-        Serial.println("Connected to Server");
-    }
-    httpsClient.print(String("GET ") + reqPath +
-                      "HTTP/1.1\r\n" +
-                      "Host: " + serverName +
-                      "\r\n" + "Connection: close\r\n\r\n");
-    while (httpsClient.connected())
-    {
-        String line = httpsClient.readStringUntil('\n');
-        if (line == "\r")
-        {
-            break;
-        }
-    }
-    return true;
-}*/
