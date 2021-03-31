@@ -130,13 +130,13 @@ void setup()
   Clock.getDate(&Year, &Month, &Day);
   Clock.getTime(&Hour, &Minute);
 
-  readInverter();
-  PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
-
   ticker.begin();
   led.yellowOff();
 
-  delay(10000);
+  delay(5000);
+  readInverter();
+  PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
+
   Serial.println("--------------------------------------------------------");
 }
 
