@@ -126,6 +126,7 @@ void setup()
 
   db.begin();
   Clock.begin();
+  //Clock.begin();
   ds18b20.begin();
 
   // Read inverter

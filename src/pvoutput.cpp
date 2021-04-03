@@ -87,7 +87,7 @@ bool pvoutput::send(uint16_t _year, uint8_t _month, uint8_t _day, uint8_t _hour,
         reqPath += String(_minute);
     }
 
-    reqPath += "&v1="; // Add energy generation
+    reqPath += "&v1=";                      // Add energy generation
     reqPath += String(_energyToday * 1000); // kWh to Wh
 
     reqPath += "&v2="; // Add power
@@ -115,13 +115,15 @@ bool callhttps()
 
     Serial.print("HTTPS Connecting");
     int r = 0; //retry counter
-    while ((!httpsClient.connect(hostPVOUTPUT, httpsPort)) && (r < 30))
+    while (!httpsClient.connect(hostPVOUTPUT, httpsPort) && (r < 30))
     {
         delay(100);
+        yield();
         Serial.print(".");
         led_pvOutput.yellowToggle();
         r++;
     }
+    Serial.println("Something is connected...");
     if (r == 30)
     {
         Serial.println("Connection failed");
@@ -152,6 +154,7 @@ bool callhttps()
         }
     }
 
+    httpsClient.stop();
     //httpsClient.stop();
     led_pvOutput.yellowOff();
     return true;

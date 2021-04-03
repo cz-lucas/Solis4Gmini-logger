@@ -1,7 +1,7 @@
 #include "time.h"
 
 WiFiUDP Udp;
-unsigned int localPort = 8888; // local port to listen for UDP packets
+unsigned int localPort = 8888;// local port to listen for UDP packets
 
 time_t getNtpTime();
 void sendNTPpacket(IPAddress &address);
@@ -113,6 +113,7 @@ time_t getNtpTime()
         }
     }
     Serial.println("No NTP Response :-(");
+    //ESP.reset();
     return 0; // return 0 if unable to get the time
 }
 
