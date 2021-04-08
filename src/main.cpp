@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "main.h"
 
-#define staticIP
+// If you want to have a static ip you have to enable it in the config.h file
 #ifdef staticIP
 // Set your Static IP address
 IPAddress local_IP(192, 168, 111, 230);

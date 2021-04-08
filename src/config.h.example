@@ -8,6 +8,9 @@
 #define HOSTNAME "ESP8266-PV-LOGGER"
 
 // Static IP config is in main.cpp
+// You enable it here
+//#define staticIP
+
 
 // MQTT
 //#define MQTT
