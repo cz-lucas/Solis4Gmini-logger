@@ -36,4 +36,4 @@
 - API [https://10k-resistor.github.io/Solis4Gmini-logger/json-api](https://10k-resistor.github.io/Solis4Gmini-logger/json-api)
 
 ### Known problems
- - ESP sometimes crashes while ntp sync
+ - ESP sometimes crashes while sending data to pvoutput
