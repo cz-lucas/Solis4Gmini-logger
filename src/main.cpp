@@ -164,6 +164,7 @@ void loop()
 
   ArduinoOTA.handle();
   MQTTClient.loop();
+  Clock.loop();
 
   // Send status-message every 5 minutes
   if (ticker.getMqttStatusFlag() == true)

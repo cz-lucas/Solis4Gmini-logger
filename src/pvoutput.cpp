@@ -110,7 +110,7 @@ bool callhttps()
 {
 
     httpsClient.setInsecure();
-    //httpsClient.setTimeout(300);
+    httpsClient.setTimeout(60);
     delay(10);
 
     Serial.print("HTTPS Connecting");
