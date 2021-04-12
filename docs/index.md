@@ -17,7 +17,7 @@
 - 4.7k resistor (for ds18b20)
 
 ### Schematic
-![Schematic](files/img/schematic.jpg "Picture from schematic")
+![Schematic](files/img/schematic.png "Picture from schematic")
 
 ### Steps to build - software
 0. Install VSCode and platformIO
