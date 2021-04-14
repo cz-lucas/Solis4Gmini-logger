@@ -14,13 +14,15 @@
 
 // MQTT
 //#define MQTT
+#define readInterval 45 // in s
+#define mqttStatusIntveral 300 // in s
+
 #ifdef MQTT
 #define mqttBrokerIP "192.168.111.2"
 #define mqttBrokerPort 1883
 #define mqtt_base_topic "/home/pv/#"
 
 
-#define readInterval 45 // in s
 #define mqtt_power_topic "/home/all/pv/actualPower"
 #define mqtt_eToday_topic "/home/all/pv/energyToday"
 #define mqtt_temp_topic "/home/all/pv/inverterTemp"
@@ -32,7 +34,6 @@
 #define mqtt_aci_topic "/home/all/pv/ac/i"
 #define mqtt_acf_topic "/home/all/pv/ac/f"
 
-#define mqttStatusIntveral 300 // in s
 #define mqtt_info_ping_topic "/home/all/pv/status/ping"
 #define mqtt_info_pong_topic "/home/all/pv/status/pong"
 #define mqtt_status_rssi_topic "/home/all/pv/status/rssi"
