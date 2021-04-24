@@ -149,9 +149,9 @@ void setup()
   readInverter();
   ArduinoOTA.handle();
 
-  card_status.update("Sending to PVOutput", "warning");
-  dashboard.sendUpdates();
-  PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
+  //card_status.update("Sending to PVOutput", "warning");
+  //dashboard.sendUpdates();
+  //PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
   card_status.update("running", "success");
   dashboard.sendUpdates();
   ArduinoOTA.handle();

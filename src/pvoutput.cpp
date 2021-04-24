@@ -1,7 +1,7 @@
 #include "pvoutput.h"
 
 #define hostPVOUTPUT "pvoutput.org"
-//#define hostPVOUTPUT "45.56.66.169"
+
 #define path "/service/r2/addstatus.jsp"
 #define httpsPort 443
 
