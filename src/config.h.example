@@ -20,6 +20,9 @@
 #ifdef MQTT
 #define mqttBrokerIP "192.168.111.2"
 #define mqttBrokerPort 1883
+//#define MQTTUSER "" // Comment this line in if you use mqtt with authentication
+//#define MQTTPASS "" // Comment this line in if you use mqtt with authentication
+
 #define mqtt_base_topic "/home/pv/#"
 
 

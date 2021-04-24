@@ -18,10 +18,10 @@ Starts MQTT
 */
 void myMqtt::begin()
 {
-    #ifdef MQTT
+#ifdef MQTT
     Serial.println("Connecting to Mqtt...");
     connect();
-    #endif
+#endif
 }
 
 /*
@@ -29,13 +29,13 @@ Loops MQTT
 */
 void myMqtt::loop()
 {
-    #ifdef MQTT
+#ifdef MQTT
     if (!client.connected())
     {
         reconnect();
     }
     client.loop();
-    #endif
+#endif
 }
 
 /*
@@ -51,7 +51,7 @@ Send values over MQTT
 */
 void myMqtt::sendValues(float power, float energyToday, float AC_U, float AC_I, float AC_F, float DC_U, float DC_I, float temperature)
 {
-    #ifdef MQTT
+#ifdef MQTT
     char bufferSend[10];
 
     dtostrf(power, 0, 0, bufferSend);
@@ -72,7 +72,7 @@ void myMqtt::sendValues(float power, float energyToday, float AC_U, float AC_I, 
     client.publish(mqtt_dcu_topic, bufferSend);
     dtostrf(DC_I, 0, 1, bufferSend);
     client.publish(mqtt_dci_topic, bufferSend);
-    #endif
+#endif
 }
 
 /*
@@ -114,6 +114,17 @@ void reconnect()
         Serial.println("Mqtt reconnect");
         String clientId = "esp8266-";
         clientId += String(WiFi.macAddress());
+
+#ifdef MQTTUSER
+        if (client.connect(clientId.c_str(), MQTTUSER, MQTTPASS))
+        {
+            client.subscribe(mqtt_base_topic);
+        }
+        else
+        {
+            delay(2000);
+        }
+#else
         if (client.connect(clientId.c_str()))
         {
             client.subscribe(mqtt_base_topic);
@@ -122,6 +133,7 @@ void reconnect()
         {
             delay(2000);
         }
+#endif
     }
 #endif
 }
@@ -137,6 +149,35 @@ void connect()
     Serial.println("Connecting to mqtt");
     client.setServer(mqttBrokerIP, mqttBrokerPort);
     client.setCallback(mqtt_callback);
-    client.subscribe(mqtt_base_topic);
+
+#ifdef MQTTUSER
+    while (!client.connected())
+    {
+        String clientId = "esp8266-";
+        clientId += String(WiFi.macAddress());
+        if (client.connect(clientId.c_str(), MQTTUSER, MQTTPASS))
+        {
+            client.subscribe(mqtt_base_topic);
+        }
+        else
+        {
+            delay(2000);
+        }
+    }
+#else
+    while (!client.connected())
+    {
+        String clientId = "esp8266-";
+        clientId += String(WiFi.macAddress());
+        if (client.connect(clientId.c_str()))
+        {
+            client.subscribe(mqtt_base_topic);
+        }
+        else
+        {
+            delay(2000);
+        }
+    }
+#endif
 #endif
 }
