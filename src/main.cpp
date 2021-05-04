@@ -56,6 +56,7 @@ uint8_t Hour = 0;
 uint8_t Minute = 0;
 bool restart = false;
 
+
 void readInverter();
 void notFound(AsyncWebServerRequest *request);
 String buildResponse(byte type);

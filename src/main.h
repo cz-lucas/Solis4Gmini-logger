@@ -12,6 +12,7 @@
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <AddrList.h>
 
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
