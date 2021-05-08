@@ -3,3 +3,5 @@ src/config.h
 .pio
 .vs/
 .vs
+.vscode
+.vscode/
