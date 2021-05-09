@@ -21,3 +21,14 @@ public:
     bool getIsInverterReachableFlagLast();
 
 };
+
+class otherModbusDevice
+{
+public:
+    otherModbusDevice();
+
+    void begin();
+    bool request();
+    int * getNode2Data();
+    bool reachable();
+};

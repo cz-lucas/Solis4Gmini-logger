@@ -100,3 +100,12 @@
 
 // TX
 #define rs485_TX 12 // D6
+
+
+// Other Modbus device
+// At the moment holding register is only implented
+//#define otherDevice
+#define oSlaveID 11
+#define oStartReg 0 // Start register
+#define oNumReg 2 // Number of registers too read
+#define oInterval 120 // readInterval 

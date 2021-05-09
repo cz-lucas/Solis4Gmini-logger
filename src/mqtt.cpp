@@ -88,6 +88,15 @@ void myMqtt::sendStatus()
 #endif
 }
 
+#ifdef otherNode
+void myMqtt::sendOtherNode(String str)
+{
+#ifdef MQTT
+    client.publish(mqttOtherNodeHoldingTopic, (char *)str.c_str());
+#endif
+}
+#endif
+
 void mqtt_callback(char *topic, byte *payload, unsigned int length)
 {
 #ifdef MQTT

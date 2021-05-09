@@ -19,4 +19,9 @@ public:
 
     bool getPVoutputFlag();
     void setPVoutputFlagToFalse();
+
+#ifdef otherNode
+    bool getOtherDeviceFlag();
+    void setOtherDeviceFlagToFalse();
+#endif
 };
