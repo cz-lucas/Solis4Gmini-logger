@@ -16,6 +16,6 @@ This function is useful if want to get data from another device like a powermete
 
 ## HTTP API
 #### Endpoint:
-``` <IP-from-your-ESP>/api/otherNode/holdingRegisters```
-Example output
+``` <IP-from-your-ESP>/api/otherNode/holdingRegisters```  
+Example output:  
 ``` 0,1,2 ```
