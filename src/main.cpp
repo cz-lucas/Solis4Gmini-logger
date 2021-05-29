@@ -20,7 +20,7 @@ influx db;
 timeControl Clock;
 pvoutput PVoutput;
 LED led;
-DS18B20 ds18b20;
+myDS18B20 ds18b20;
 
 #ifdef otherNode
 otherModbusDevice OtherNode;
@@ -53,6 +53,8 @@ float ac_f = 10.0;
 float energyToday = 0.0;
 float power = 0.0;
 float temperature = 0.0;
+
+float ds18b20Temperature = 0.0;
 
 uint16_t Year = 2000;
 uint8_t Month = 0;
@@ -115,21 +117,17 @@ void setup()
   /* Start AsyncWebServer */
   server.onNotFound(notFound);
 
-  server.on("/api/power.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "application/json", buildResponse(0));
-  });
-  server.on("/api/all.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "application/json", buildResponse(1));
-  });
+  server.on("/api/power.json", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "application/json", buildResponse(0)); });
+  server.on("/api/all.json", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "application/json", buildResponse(1)); });
 #ifdef otherNode
-  server.on("/api/otherNode/holdingRegisters", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", buildResponse(2));
-  });
+  server.on("/api/otherNode/holdingRegisters", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/plain", buildResponse(2)); });
 #endif
 
-  server.on("/api/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/html", restartAPI());
-  });
+  server.on("/api/restart", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/html", restartAPI()); });
 
   server.begin();
   card_status.update("Starting");
@@ -140,8 +138,6 @@ void setup()
 
   db.begin();
   Clock.begin();
-  //Clock.begin();
-  ds18b20.begin();
 
   // Read inverter
   readInverter();
@@ -186,6 +182,16 @@ void loop()
     MQTTClient.sendStatus();
     ticker.setMqttStatusFlagToFalse();
   }
+
+#ifdef DS18B20
+  // Read DS18B20 every x seconds
+  if (ticker.getDS18B20Flag() == true)
+  {
+    ticker.setDS18B20FlagToFalse();
+    ds18b20Temperature = ds18b20.getTemperature();
+    MQTTClient.sendDS18B20Temperature(ds18b20Temperature);
+  }
+#endif
 
   // Send data every 45 seconds
   if (ticker.getReadFlag() == true)
@@ -242,7 +248,12 @@ void loop()
     if (Inverter.isInverterReachable() == true)
     {
       card_status.update("Sending to PVOutput", "warning");
+
+      #if (PVOUTPUT_temperatureSource == 1) && defined(ds18b20)
+      PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, ds18b20Temperature);
+      #else
       PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
+      #endif
       card_status.update("Inverter online", "success");
     }
     else
@@ -383,6 +394,12 @@ String buildResponse(byte type)
     str += String(ac_i);
     str += ",\"ac_f\": ";
     str += String(ac_f);
+
+#ifdef DS18B20
+    str += ",\"ds18b20Temperature\": ";
+    str += String(ds18b20Temperature);
+#endif
+
     str += ",\"temperature\": ";
     str += String(temperature);
     str += "}";

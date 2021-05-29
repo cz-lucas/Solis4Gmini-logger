@@ -26,6 +26,8 @@
 
 #include <WiFiClientSecure.h>
 
+#include <OneWire.h>
+
 #include "config.h"
 #include "modbus.h"
 #include "mqtt.h"

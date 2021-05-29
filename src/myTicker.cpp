@@ -92,6 +92,28 @@ void myTicker::setPVoutputFlagToFalse()
     _pvoutputFlag = false;
 }
 
+// ####################################### DS18B20 #######################################################
+Ticker ds18b20Ticker;
+bool _ds18b20Flag = false;
+
+void ds18b20FlagChange()
+{
+    Serial.println("DEBUG 5 ");
+    Serial.println(_ds18b20Flag);
+    _ds18b20Flag = true;
+}
+
+bool myTicker::getDS18B20Flag()
+{
+
+    return _ds18b20Flag;
+}
+
+void myTicker::setDS18B20FlagToFalse()
+{
+    _ds18b20Flag = false;
+}
+
 // ####################################### Other devide #######################################################
 #ifdef otherNode
 Ticker otherDeviceTicker;
@@ -125,6 +147,7 @@ void myTicker::begin()
     readTicker.attach(readInterval, readFlagChange);
     influxDBTicker.attach(influxdbInterval, influxDBFlagChange);
     pvoutputTicker.attach(PVOUTPUT_sendInterval, pvoutputFlagChange);
+    ds18b20Ticker.attach(DS18B20_READ_INTERVAL, ds18b20FlagChange);
 
 #ifdef otherNode
     pvoutputTicker.attach(oInterval, otherDeviceFlagChange);

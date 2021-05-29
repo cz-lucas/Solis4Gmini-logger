@@ -76,6 +76,19 @@ void myMqtt::sendValues(float power, float energyToday, float AC_U, float AC_I, 
 }
 
 /*
+Sends temperature from thje DS18B20
+@param temperature Value from the ds18b20 (float)
+*/
+void myMqtt::sendDS18B20Temperature(float temperature)
+{
+#ifdef DS18B20
+    char bufferSend[10];
+    dtostrf(temperature, 0, 1, bufferSend);
+    client.publish(mqtt_ds18b20_topic, bufferSend);
+#endif
+}
+
+/*
 Sends status
 */
 void myMqtt::sendStatus()

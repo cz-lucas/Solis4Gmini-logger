@@ -8,6 +8,6 @@
 - [ ] "midnight reset"
 - [X] API (Json?)
 - [ ] IPv6
-- [ ] ds18b20
+- [X] ds18b20
 - [ ] Sensors(?)  
 - [ ] Display(?)  

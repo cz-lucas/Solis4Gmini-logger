@@ -13,6 +13,7 @@ public:
     void loop();
     void sendStatus();
     void sendValues(float power, float energyToday, float AC_U, float AC_I, float AC_F, float DC_U, float DC_I, float temperature);
+    void sendDS18B20Temperature(float temperature);
 
     #ifdef otherNode
     void sendOtherNode(String str);
