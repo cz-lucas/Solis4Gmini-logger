@@ -22,6 +22,11 @@ pvoutput PVoutput;
 LED led;
 DS18B20 ds18b20;
 
+#ifdef otherNode
+otherModbusDevice OtherNode;
+String otherNodeOutput;
+#endif
+
 // ESP-Dash
 AsyncWebServer server(80);
 ESPDash dashboard(&server);
@@ -56,7 +61,6 @@ uint8_t Hour = 0;
 uint8_t Minute = 0;
 bool restart = false;
 
-
 void readInverter();
 void notFound(AsyncWebServerRequest *request);
 String buildResponse(byte type);
@@ -72,6 +76,10 @@ void setup()
   Serial.println("Hello");
 
   Inverter.begin();
+
+#ifdef otherNode
+  OtherNode.begin();
+#endif
 
   Serial.print("Connecting to: ");
   Serial.println(SSID);
@@ -113,6 +121,11 @@ void setup()
   server.on("/api/all.json", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "application/json", buildResponse(1));
   });
+#ifdef otherNode
+  server.on("/api/otherNode/holdingRegisters", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", buildResponse(2));
+  });
+#endif
 
   server.on("/api/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/html", restartAPI());
@@ -242,6 +255,35 @@ void loop()
     ticker.setPVoutputFlagToFalse();
   }
 
+#ifdef otherNode
+  // Read other Node
+  if (ticker.getOtherDeviceFlag() == true)
+  {
+    //MQTTClient.sendStatus();
+    Serial.println("## Requesting");
+    OtherNode.request();
+    if (OtherNode.reachable() == true)
+    {
+      Serial.println("## Success");
+      otherNodeOutput = "";
+      for (uint16_t x = 0; x < oNumReg; x++)
+      {
+        otherNodeOutput += OtherNode.getNode2Data()[x];
+        if (x != oNumReg - 1)
+        {
+          otherNodeOutput += ",";
+        }
+      }
+    }
+    else
+    {
+      Serial.println("## Failed");
+      otherNodeOutput = "node offline";
+    }
+    MQTTClient.sendOtherNode(otherNodeOutput);
+    ticker.setOtherDeviceFlagToFalse();
+  }
+#endif
   delay(300);
 
   digitalWrite(2, HIGH);
@@ -305,21 +347,24 @@ void notFound(AsyncWebServerRequest *request)
 
 String buildResponse(byte type)
 {
-  String str = "{";
+  String str;
 
   switch (type)
   {
 
   case 0: // Only return power
+    str = "{";
     str += "\"power\": ";
     str += String(power);
     str += ",\"energyToday\": ";
     str += String(energyToday);
     str += ",\"isOnline\": ";
     str += String(Inverter.isInverterReachable());
+    str += "}";
     break;
 
   case 1: // Return all data
+    str = "{";
     str += "\"power\": ";
     str += String(power);
     str += ",\"energyToday\": ";
@@ -340,10 +385,20 @@ String buildResponse(byte type)
     str += String(ac_f);
     str += ",\"temperature\": ";
     str += String(temperature);
+    str += "}";
+    break;
+
+#ifdef otherNode
+  case 2:
+    str = otherNodeOutput;
+    break;
+#endif
+
+  default:
+    str = "Function not supported";
     break;
   }
 
-  str += "}";
   return str;
 }
 

@@ -6,6 +6,13 @@ SoftwareSerial rs485(rs485_RX, rs485_TX, false); // RX, TX, Invert signal
 // instantiate ModbusMaster object
 ModbusMaster node;
 
+#ifdef otherNode
+
+ModbusMaster node2;
+int node2Output[oNumReg];
+bool node2Reachable = false;
+#endif
+
 void postTransmission();
 void preTransmission();
 
@@ -29,6 +36,10 @@ inverter::inverter()
 {
 }
 
+otherModbusDevice::otherModbusDevice()
+{
+}
+
 /*
 Requests data from the inverter
 */
@@ -44,10 +55,13 @@ bool inverter::request()
     {
         //Serial.print("P: ");
 
-        if( _ac_i != 0.0){ // Detect softrun
-        _power = node.getResponseBuffer(0x00);
-        _softRun = false;
-        } else {
+        if (_ac_i != 0.0)
+        { // Detect softrun
+            _power = node.getResponseBuffer(0x00);
+            _softRun = false;
+        }
+        else
+        {
             _power = 0.0;
             _softRun = true;
         }
@@ -113,7 +127,7 @@ bool inverter::request()
     digitalWrite(2, LOW);
     delay(50);
     digitalWrite(2, HIGH);
-//    delay(400);
+    //    delay(400);
 
     Serial.println("------------------------------------------");
     return reachable;
@@ -192,7 +206,8 @@ bool inverter::setIsInverterReachableFlagLast(bool _value)
     return reachable_flag__lst;
 }
 
-bool inverter::isSoftRun(){
+bool inverter::isSoftRun()
+{
     return _softRun;
 }
 
@@ -210,6 +225,8 @@ void inverter::begin()
     node.postTransmission(postTransmission);
 }
 
+/////////////////////////////////////////////////////
+
 void preTransmission()
 {
     digitalWrite(MAX485_DE, 1);
@@ -218,4 +235,72 @@ void preTransmission()
 void postTransmission()
 {
     digitalWrite(MAX485_DE, 0);
+}
+
+//////////////////////////////////////////////////////
+
+void otherModbusDevice::begin()
+{
+
+#ifdef otherNode
+
+
+    digitalWrite(MAX485_DE, 0);
+
+    node2.begin(oSlaveID, rs485); // SlaveID,Serial
+    // Callbacks allow us to configure the RS485 transceiver correctly
+    node2.preTransmission(preTransmission);
+    node2.postTransmission(postTransmission);
+
+#endif
+}
+
+bool otherModbusDevice::request()
+{
+
+#ifdef otherNode
+    uint8_t result;
+
+    result = node2.readHoldingRegisters(oStartReg, oNumReg);
+    if (result == node.ku8MBSuccess)
+    {
+        for (uint16_t x = 0; x < oNumReg; x++)
+        {
+            node2Output[x] = node2.getResponseBuffer(x);
+            /*Serial.print("## ");
+            Serial.print(x);
+            Serial.print("\t");
+            Serial.println(node2Output[x]);*/
+        }
+        node2Reachable = true;
+    }
+    else
+    {
+        node2Reachable = false;
+        return false;
+    }
+    return true;
+#else
+    return true;
+#endif
+}
+
+int *otherModbusDevice::getNode2Data()
+{
+#ifdef otherNode
+
+    return node2Output;
+#else
+    return 0;
+#endif
+}
+
+bool otherModbusDevice::reachable()
+{
+#ifdef otherNode
+
+    return node2Reachable;
+#else
+    return true;
+#endif
 }

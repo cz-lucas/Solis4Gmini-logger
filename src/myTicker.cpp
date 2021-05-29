@@ -34,7 +34,7 @@ void readFlagChange()
 {
     Serial.println("DEBUG 2 ");
     Serial.println(_readFlag);
-    _readFlag = true; 
+    _readFlag = true;
 }
 
 bool myTicker::getReadFlag()
@@ -56,7 +56,7 @@ void influxDBFlagChange()
 {
     Serial.println("DEBUG 3 ");
     Serial.println(_influxDBFlag);
-    _influxDBFlag = true; 
+    _influxDBFlag = true;
 }
 
 bool myTicker::getinfluxDBFlag()
@@ -78,7 +78,7 @@ void pvoutputFlagChange()
 {
     Serial.println("DEBUG 4 ");
     Serial.println(_pvoutputFlag);
-    _pvoutputFlag = true; 
+    _pvoutputFlag = true;
 }
 
 bool myTicker::getPVoutputFlag()
@@ -92,6 +92,30 @@ void myTicker::setPVoutputFlagToFalse()
     _pvoutputFlag = false;
 }
 
+// ####################################### Other devide #######################################################
+#ifdef otherNode
+Ticker otherDeviceTicker;
+bool _otherDeviceFlag = false;
+
+void otherDeviceFlagChange()
+{
+    Serial.println("DEBUG 4 ");
+    Serial.println(_otherDeviceFlag);
+    _otherDeviceFlag = true;
+}
+
+bool myTicker::getOtherDeviceFlag()
+{
+
+    return _otherDeviceFlag;
+}
+
+void myTicker::setOtherDeviceFlagToFalse()
+{
+    _otherDeviceFlag = false;
+}
+#endif
+
 /*
 Starts ticker
 */
@@ -101,4 +125,8 @@ void myTicker::begin()
     readTicker.attach(readInterval, readFlagChange);
     influxDBTicker.attach(influxdbInterval, influxDBFlagChange);
     pvoutputTicker.attach(PVOUTPUT_sendInterval, pvoutputFlagChange);
+
+#ifdef otherNode
+    pvoutputTicker.attach(oInterval, otherDeviceFlagChange);
+#endif
 }
