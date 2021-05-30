@@ -166,6 +166,11 @@ void setup()
   dashboard.sendUpdates();
   ArduinoOTA.handle();
 
+#ifdef DS18B20
+  // Read DS18B20
+    ds18b20Temperature = ds18b20.getTemperature();
+#endif
+
   Serial.println("--------------------------------------------------------");
 }
 
@@ -249,11 +254,11 @@ void loop()
     {
       card_status.update("Sending to PVOutput", "warning");
 
-      #if (PVOUTPUT_temperatureSource == 1) && defined(ds18b20)
+#if (PVOUTPUT_temperatureSource == 1) && defined(ds18b20)
       PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, ds18b20Temperature);
-      #else
+#else
       PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
-      #endif
+#endif
       card_status.update("Inverter online", "success");
     }
     else
