@@ -3,12 +3,11 @@
 #include "main.h"
 
 
-class DS18B20
+class myDS18B20
 {
 public:
-    DS18B20();
+    myDS18B20();
 
-    void begin();
-
+    float getTemperature();
 
 };

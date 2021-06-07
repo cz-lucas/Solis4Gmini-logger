@@ -20,6 +20,10 @@ public:
     bool getPVoutputFlag();
     void setPVoutputFlagToFalse();
 
+    bool getDS18B20Flag();
+    void setDS18B20FlagToFalse();
+
+
 #ifdef otherNode
     bool getOtherDeviceFlag();
     void setOtherDeviceFlagToFalse();

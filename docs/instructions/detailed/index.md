@@ -26,6 +26,7 @@
  * [InfluxDB-Client-for-Arduino  https://github.com/tobiasschuerg/InfluxDB-Client-for-Arduino]( https://github.com/tobiasschuerg/InfluxDB-Client-for-Arduino)
  * [Time https://github.com/PaulStoffregen/Time](https://github.com/PaulStoffregen/Time)
  * [NTPClient https://github.com/arduino-libraries/NTPClient](https://github.com/arduino-libraries/NTPClient)
+ * [OneWire https://github.com/PaulStoffregen/OneWire](https://github.com/PaulStoffregen/OneWire)
 2. Rename the file config.h.example to config.h . The file is in the src folder.
 3. Open the file src.ino with the Arduino IDE.
 4. Change your WiFi-Credentials (and all the other stuff) in the config.h file.

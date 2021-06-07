@@ -13,30 +13,31 @@
 
 
 // MQTT
-//#define MQTT
-#define readInterval 45 // in s
-#define mqttStatusIntveral 300 // in s
-
+#define MQTT
 #ifdef MQTT
 #define mqttBrokerIP "192.168.111.2"
 #define mqttBrokerPort 1883
-//#define MQTTUSER "" // Comment this line in if you use mqtt with authentication
-//#define MQTTPASS "" // Comment this line in if you use mqtt with authentication
+//#define MQTTUSER "" // Comment this line out if you use mqtt without authentication
+//#define MQTTPASS "" // Comment this line out if you use mqtt without authentication
 
 #define mqtt_base_topic "/home/pv/#"
 
+#define readInterval 45 // in s
+#define mqtt_power_topic "/home/all/pv/actualPower" // power
+#define mqtt_eToday_topic "/home/all/pv/energyToday" // energy today
+#define mqtt_temp_topic "/home/all/pv/inverterTemp" // intverter temperature
 
-#define mqtt_power_topic "/home/all/pv/actualPower"
-#define mqtt_eToday_topic "/home/all/pv/energyToday"
-#define mqtt_temp_topic "/home/all/pv/inverterTemp"
+#define mqtt_dcu_topic "/home/all/pv/dc/u" // DC voltage
+#define mqtt_dci_topic "/home/all/pv/dc/i" // DC current
 
-#define mqtt_dcu_topic "/home/all/pv/dc/u"
-#define mqtt_dci_topic "/home/all/pv/dc/i"
+#define mqtt_acu_topic "/home/all/pv/ac/u" // AC voltage
+#define mqtt_aci_topic "/home/all/pv/ac/i" // AC current
+#define mqtt_acf_topic "/home/all/pv/ac/f" // AC frequency
 
-#define mqtt_acu_topic "/home/all/pv/ac/u"
-#define mqtt_aci_topic "/home/all/pv/ac/i"
-#define mqtt_acf_topic "/home/all/pv/ac/f"
+// Topic for sending the values from the ds18b20. Only used if you are using a ds18b20.
+#define mqtt_ds18b20_topic "/home/all/pv/ds18b20Temp" 
 
+#define mqttStatusIntveral 300 // in s
 #define mqtt_info_ping_topic "/home/all/pv/status/ping"
 #define mqtt_info_pong_topic "/home/all/pv/status/pong"
 #define mqtt_status_rssi_topic "/home/all/pv/status/rssi"
@@ -74,6 +75,17 @@
 #define PVOUTPUT_systemID "SYSTEM_ID"
 #define PVOUTPUT_key "PVOUTPUT-KEY"
 #endif
+// Temperaturesource for PVoutput
+// Options:
+// 0: using the temperature from the inverter
+// 1: using the temperature from a attached DS18B20 (works only if a ds18b20 is attached an configured in the logger.)
+#define PVOUTPUT_temperatureSource 0
+
+
+// DS18B20
+#define DS18B20
+#define DS18B20_PIN 0 // D3
+#define DS18B20_READ_INTERVAL 60 // in s
 
 //  NTP
 #define NTP_SERVER_IP "pool.ntp.org"
