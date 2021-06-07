@@ -83,7 +83,7 @@
 
 
 // DS18B20
-#define DS18B20
+//#define DS18B20
 #define DS18B20_PIN 0 // D3
 #define DS18B20_READ_INTERVAL 60 // in s
 
