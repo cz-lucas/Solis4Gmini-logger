@@ -43,6 +43,10 @@ Card card_AC_F(&dashboard, GENERIC_CARD, "AC FREQUENCY (Hz)");
 Card card_DC_U(&dashboard, GENERIC_CARD, "DC VOLTAGE (V)");
 Card card_DC_I(&dashboard, GENERIC_CARD, "DC CURRENT (I)");
 
+#ifdef DS18B20
+Card card_temperatureDS18B20(&dashboard, TEMPERATURE_CARD, "DS18B20 Temperature (°C)");
+#endif
+
 float dc_u = 0.0;
 float dc_i = 0.0;
 
@@ -352,6 +356,10 @@ void readInverter()
   card_DC_U.update(dc_u);
   card_DC_I.update(dc_i);
   card_AC_F.update(ac_f);
+
+  #ifdef DS18B20
+  card_temperatureDS18B20.update(ds18b20Temperature);
+  #endif
 
   dashboard.sendUpdates();
 }
