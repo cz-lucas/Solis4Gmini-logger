@@ -45,6 +45,7 @@ Requests data from the inverter
 */
 bool inverter::request()
 {
+    uint8_t inverterOffCounter = 0;
 
     Serial.println("------------------------------------------");
     uint8_t result;
@@ -70,8 +71,9 @@ bool inverter::request()
     {
         Serial.println("+ GET POWER FAILED");
         _power = -1.0;
-        reachable = false;
+        //reachable = false;
         Serial.println("Inverter not reachable");
+        inverterOffCounter++;
         //return false;
     }
     delay(readDelay);
@@ -85,7 +87,7 @@ bool inverter::request()
     else
     {
         Serial.println("+ GET ENERGY FAILED");
-        reachable = false;
+        inverterOffCounter++;
     }
     delay(readDelay);
     digitalWrite(2, LOW);
@@ -99,7 +101,7 @@ bool inverter::request()
     else
     {
         Serial.println("+ GET DC FAILED");
-        reachable = false;
+        inverterOffCounter++;
         _dc_u = -1;
         _dc_i = -1;
     }
@@ -118,7 +120,7 @@ bool inverter::request()
     else
     {
         Serial.println("+ GET AC FAILED");
-        reachable = false;
+        inverterOffCounter++;
         _ac_u = -1;
         _ac_i = -1;
         _ac_f = -1;
@@ -130,6 +132,12 @@ bool inverter::request()
     //    delay(400);
 
     Serial.println("------------------------------------------");
+
+    if(inverterOffCounter > 2){
+        reachable = false;
+    }else{
+        reachable = true;
+    }
     return reachable;
 }
 
