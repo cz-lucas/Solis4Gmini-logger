@@ -4,28 +4,19 @@
 
 class myTicker
 {
+
+private:
+    bool statusFlag;
+    unsigned int interval;
+    Ticker *t;
+
 public:
-    myTicker();
+    myTicker(unsigned int interval);
+    ~myTicker();
+
     void begin();
 
-    bool getMqttStatusFlag();
-    void setMqttStatusFlagToFalse();
-
-    bool getReadFlag();
-    void setReadFlagToFalse();
-
-    bool getinfluxDBFlag();
-    void setInfluxDBFlagToFalse();
-
-    bool getPVoutputFlag();
-    void setPVoutputFlagToFalse();
-
-    bool getDS18B20Flag();
-    void setDS18B20FlagToFalse();
-
-
-#ifdef otherNode
-    bool getOtherDeviceFlag();
-    void setOtherDeviceFlagToFalse();
-#endif
+    bool getStatusFlag();
+    void setStatusFlagToFalse();
+    void StatusFlagChange();
 };
