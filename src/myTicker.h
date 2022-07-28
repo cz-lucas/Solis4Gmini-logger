@@ -6,7 +6,7 @@ class myTicker
 {
 
 private:
-    bool statusFlag;
+    bool flag;
     unsigned int interval;
     Ticker *t;
 
@@ -16,7 +16,7 @@ public:
 
     void begin();
 
-    bool getStatusFlag();
-    void setStatusFlagToFalse();
-    void StatusFlagChange();
+    bool getFlag();
+    void setFlagToFalse();
+    void FlagChange();
 };

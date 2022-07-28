@@ -13,27 +13,25 @@ myTicker::~myTicker(){
     delete t;
 }
 
-Ticker mqttStatusTicker;
-bool _mqttStatusFlag = false;
 
-void myTicker::StatusFlagChange()
+void myTicker::FlagChange()
 {
-    this->statusFlag = true;
+    this->flag = true;
 }
 
-bool myTicker::getStatusFlag()
+bool myTicker::getFlag()
 {
 
-    return this->statusFlag;
+    return this->flag;
 }
 
-void myTicker::setStatusFlagToFalse()
+void myTicker::setFlagToFalse()
 {
-    this->statusFlag = false;
+    this->flag = false;
 }
 
 void callbackFunc(myTicker* instance) {
-  instance->StatusFlagChange();
+  instance->FlagChange();
 }
 /*
 Starts ticker

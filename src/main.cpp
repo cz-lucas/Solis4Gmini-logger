@@ -15,7 +15,25 @@ IPAddress secondaryDNS(192, 168, 111, 2); // optional
 
 inverter Inverter;
 myMqtt MQTTClient;
-myTicker ticker;
+
+myTicker readTicker(readInterval);
+
+#ifdef MQTT
+myTicker mqttStatusTicker(mqttStatusIntveral);
+#endif
+
+#ifdef influxDB
+myTicker influxDbTicker(influxdbInterval);
+#endif
+
+#ifdef PVOUTPUT
+myTicker pvOutputTicker(PVOUTPUT_sendInterval);
+#endif
+
+#ifdef DS18B20
+myTicker DS18B20Ticker(DS18B20_READ_INTERVAL);
+#endif
+
 influx db;
 timeControl Clock;
 pvoutput PVoutput;
@@ -151,7 +169,6 @@ void setup()
   Clock.getDate(&Year, &Month, &Day);
   Clock.getTime(&Hour, &Minute);
 
-  ticker.begin();
   led.yellowOff();
 
   delay(8500);
@@ -163,16 +180,32 @@ void setup()
   readInverter();
   ArduinoOTA.handle();
 
-  //card_status.update("Sending to PVOutput", "warning");
-  //dashboard.sendUpdates();
-  //PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
+  // card_status.update("Sending to PVOutput", "warning");
+  // dashboard.sendUpdates();
+  // PVoutput.send(Year, Month, Day, Hour, Minute, energyToday, power, dc_u, temperature);
   card_status.update("running", "success");
   dashboard.sendUpdates();
   ArduinoOTA.handle();
 
 #ifdef DS18B20
   // Read DS18B20
-    ds18b20Temperature = ds18b20.getTemperature();
+  ds18b20Temperature = ds18b20.getTemperature();
+#endif
+
+#ifdef MQTT
+  mqttStatusTicker.begin();
+#endif
+
+#ifdef influxDB
+  influxDbTicker.begin();
+#endif
+
+#ifdef PVOUTPUT
+  pvOutputTicker.begin();
+#endif
+
+#ifdef DS18B20
+  DS18B20Ticker.begin();
 #endif
 
   Serial.println("--------------------------------------------------------");
@@ -186,10 +219,10 @@ void loop()
   Clock.loop();
 
   // Send status-message every 5 minutes
-  if (ticker.getMqttStatusFlag() == true)
+  if (mqttStatusTicker.getFlag() == true)
   {
     MQTTClient.sendStatus();
-    ticker.setMqttStatusFlagToFalse();
+    mqttStatusTicker.setFlagToFalse();
   }
 
 #ifdef DS18B20
@@ -203,7 +236,7 @@ void loop()
 #endif
 
   // Send data every 45 seconds
-  if (ticker.getReadFlag() == true)
+  if (readTicker.getFlag() == true)
   {
     readInverter();
     if (Inverter.isInverterReachable() == true)
@@ -232,7 +265,7 @@ void loop()
     }
 
     led.yellowOff();
-    ticker.setReadFlagToFalse();
+    readTicker.setFlagToFalse();
 
     if (restart == true)
     {
@@ -241,16 +274,19 @@ void loop()
     }
   }
 
-  if (ticker.getinfluxDBFlag() == true)
+#ifdef influxDB
+  if (influxDbTicker.getFlag() == true)
   {
     if (Inverter.isInverterReachable() == true)
     {
       db.write(power, energyToday, ac_u, ac_i, ac_f, dc_u, dc_i, temperature);
     }
-    ticker.setInfluxDBFlagToFalse();
+    influxDbTicker.setFlagToFalse();
   }
+#endif
 
-  if (ticker.getPVoutputFlag() == true)
+#ifdef PVOUTPUT
+  if (pvOutputTicker.getFlag() == true)
   {
     Clock.getDate(&Year, &Month, &Day);
     Clock.getTime(&Hour, &Minute);
@@ -272,14 +308,15 @@ void loop()
         energyToday = 0.0; // Reset EenergyToday at 0 o'clock
       }
     }
-    ticker.setPVoutputFlagToFalse();
+    pvOutputTicker.setFlagToFalse();
   }
+#endif
 
 #ifdef otherNode
   // Read other Node
   if (ticker.getOtherDeviceFlag() == true)
   {
-    //MQTTClient.sendStatus();
+    // MQTTClient.sendStatus();
     Serial.println("## Requesting");
     OtherNode.request();
     if (OtherNode.reachable() == true)
@@ -307,7 +344,7 @@ void loop()
   delay(300);
 
   digitalWrite(2, HIGH);
-  //Clock.print();
+  // Clock.print();
 }
 
 void readInverter()
@@ -357,9 +394,9 @@ void readInverter()
   card_DC_I.update(dc_i);
   card_AC_F.update(ac_f);
 
-  #ifdef DS18B20
+#ifdef DS18B20
   card_temperatureDS18B20.update(ds18b20Temperature);
-  #endif
+#endif
 
   dashboard.sendUpdates();
 }
